@@ -7,6 +7,12 @@ import { cn } from "@/lib/utils"
 
 const navigation = [
   {
+    name: "Dashboard",
+    items: [
+      { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+    ],
+  },
+  {
     name: "Tracing",
     items: [
       { name: "Traces", href: "/tracing/traces", icon: Activity },
