@@ -102,13 +102,15 @@ const mockBenchmarks: Benchmark[] = [
 export default function BenchmarksPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | "all">("all")
+  const [versionFilter, setVersionFilter] = useState<string>("all")
 
   const filteredBenchmarks = mockBenchmarks.filter((benchmark) => {
     const matchesSearch =
       benchmark.taskBrief.toLowerCase().includes(searchQuery.toLowerCase()) ||
       benchmark.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesDifficulty = difficultyFilter === "all" || benchmark.difficulty === difficultyFilter
-    return matchesSearch && matchesDifficulty
+    const matchesVersion = versionFilter === "all" || benchmark.version === versionFilter
+    return matchesSearch && matchesDifficulty && matchesVersion
   })
 
   return (
@@ -138,6 +140,16 @@ export default function BenchmarksPage() {
                 className="h-9 pl-9 bg-background border-border"
               />
             </div>
+            <Select value={versionFilter} onValueChange={setVersionFilter}>
+              <SelectTrigger className="w-[160px] h-9 bg-background border-border">
+                <SelectValue placeholder="Version" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All versions</SelectItem>
+                <SelectItem value="1.0">Sophia v1</SelectItem>
+                <SelectItem value="2.0">Sophia v2</SelectItem>
+              </SelectContent>
+            </Select>
             <Select value={difficultyFilter} onValueChange={(value) => setDifficultyFilter(value as Difficulty | "all")}>
               <SelectTrigger className="w-[160px] h-9 bg-background border-border">
                 <SelectValue placeholder="Difficulty" />

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Activity, BarChart3, GitBranch, MessageSquare, FileText, User } from "lucide-react"
+import { Activity, BarChart3, GitBranch, MessageSquare, FileText, User, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -28,7 +28,10 @@ const navigation = [
   },
   {
     name: "Benchmark",
-    items: [{ name: "Benchmark", href: "/benchmarks", icon: FileText }],
+    items: [
+      { name: "Benchmark", href: "/benchmarks", icon: FileText },
+      { name: "Model Evaluation", href: "/benchmarks/model-evaluation", icon: Sparkles },
+    ],
   },
 ]
 

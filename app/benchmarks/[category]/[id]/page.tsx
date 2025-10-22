@@ -2,13 +2,14 @@
 
 import { use, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Edit, Archive, Save, X, FileText, MessageSquare, Reply, RotateCcw } from "lucide-react"
+import { ArrowLeft, Edit, Archive, Save, X, FileText, MessageSquare, Reply, RotateCcw, Bot, TrendingUp, TrendingDown, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Progress } from "@/components/ui/progress"
 
 // Mock data
 const mockBenchmark = {
@@ -90,6 +91,57 @@ const mockDiscussions = [
     comment: "The expected output format looks great! Very comprehensive.",
     timestamp: "1 day ago",
     replies: [],
+  },
+]
+
+const mockAgentPerformance = [
+  {
+    id: "1",
+    name: "Sophia v3",
+    version: "3.0.2",
+    avgScore: 8.4,
+    accuracy: 91,
+    latency: 850,
+    successRate: 95,
+    runs: 156,
+    trend: "up",
+    color: "bg-blue-500",
+  },
+  {
+    id: "2",
+    name: "Sophia v2",
+    version: "2.1.5",
+    avgScore: 7.2,
+    accuracy: 84,
+    latency: 920,
+    successRate: 89,
+    runs: 247,
+    trend: "neutral",
+    color: "bg-purple-500",
+  },
+  {
+    id: "3",
+    name: "Manus",
+    version: "1.8.3",
+    avgScore: 6.8,
+    accuracy: 78,
+    latency: 1100,
+    successRate: 82,
+    runs: 124,
+    trend: "up",
+    color: "bg-green-500",
+  },
+  {
+    id: "4",
+    name: "GPT-4o",
+    version: "2024-11",
+    avgScore: 7.9,
+    accuracy: 88,
+    latency: 780,
+    successRate: 91,
+    runs: 89,
+    trend: "down",
+    color: "bg-orange-500",
   },
 ]
 
@@ -457,6 +509,76 @@ export default function TaskDetailPage({
                     Post Comment
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Agent Performance */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bot className="h-4 w-4" />
+                  Agent Performance
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {mockAgentPerformance.map((agent) => (
+                  <div
+                    key={agent.id}
+                    className="p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors space-y-3"
+                  >
+                    {/* Agent Header */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`h-3 w-3 rounded-full ${agent.color}`} />
+                        <div>
+                          <p className="font-semibold text-sm">{agent.name}</p>
+                          <p className="text-xs text-muted-foreground">v{agent.version}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {agent.trend === "up" && <TrendingUp className="h-4 w-4 text-green-500" />}
+                        {agent.trend === "down" && <TrendingDown className="h-4 w-4 text-red-500" />}
+                        <Badge variant="outline" className="text-xs">
+                          {agent.runs} runs
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Score */}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-orange-500">{agent.avgScore}</span>
+                      <span className="text-xs text-muted-foreground">avg score</span>
+                    </div>
+
+                    {/* Metrics */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Accuracy</span>
+                        <span className="font-medium">{agent.accuracy}%</span>
+                      </div>
+                      <Progress value={agent.accuracy} className="h-1.5" />
+
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Success Rate</span>
+                        <span className="font-medium">{agent.successRate}%</span>
+                      </div>
+                      <Progress value={agent.successRate} className="h-1.5" />
+
+                      <div className="flex items-center justify-between text-xs pt-1">
+                        <span className="text-muted-foreground">Avg Latency</span>
+                        <span className="font-medium">{agent.latency}ms</span>
+                      </div>
+                    </div>
+
+                    {/* Best Performer Badge */}
+                    {agent.avgScore === Math.max(...mockAgentPerformance.map((a) => a.avgScore)) && (
+                      <div className="flex items-center gap-1 pt-2 border-t">
+                        <CheckCircle2 className="h-3 w-3 text-green-500" />
+                        <span className="text-xs font-medium text-green-500">Best Performer</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </CardContent>
             </Card>
           </div>

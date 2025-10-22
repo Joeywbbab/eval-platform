@@ -118,7 +118,7 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
         </div>
 
         {/* Category Stats */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Queries</CardTitle>
@@ -142,6 +142,15 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
             <CardContent>
               <div className="text-2xl font-bold text-orange-500">{avgScore}</div>
               <p className="text-xs text-muted-foreground mt-1">out of 10 points</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Agent Number</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockTaskBriefs.length}</div>
+              <p className="text-xs text-muted-foreground mt-1">active agents</p>
             </CardContent>
           </Card>
         </div>
