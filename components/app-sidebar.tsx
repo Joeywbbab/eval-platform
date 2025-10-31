@@ -16,7 +16,7 @@ const navigation = [
     name: "Tracing",
     items: [
       { name: "Traces", href: "/tracing/traces", icon: Activity },
-      { name: "Trajectory View", href: "/tracing/trajectory", icon: GitBranch },
+      { name: "Trajectory", href: "/tracing/trajectory", icon: GitBranch },
     ],
   },
   {
@@ -29,7 +29,7 @@ const navigation = [
   {
     name: "Benchmark",
     items: [
-      { name: "Benchmark", href: "/benchmarks", icon: FileText },
+      { name: "Query management", href: "/benchmarks", icon: FileText },
       { name: "Model Evaluation", href: "/benchmarks/model-evaluation", icon: Sparkles },
     ],
   },
@@ -80,16 +80,7 @@ export function AppSidebar() {
           </div>
         ))}
       </nav>
-
-      {/* User section */}
-      <div className="border-t border-sidebar-border p-4">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors">
-          <div className="h-8 w-8 rounded-full bg-sidebar-accent flex items-center justify-center">
-            <User className="h-4 w-4" />
-          </div>
-          <span>Account</span>
-        </button>
-      </div>
+  
     </div>
   )
 }

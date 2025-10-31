@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
 // Mock data
 const mockBenchmark = {
@@ -211,7 +212,23 @@ export default function TaskDetailPage({
     <div className="min-h-screen bg-background p-8">
       <div className="mx-auto max-w-7xl space-y-8">
         {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="pb-4 border-b border-border">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/benchmarks">Benchmark</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href={`/benchmarks/${categorySlug}`}>{mockBenchmark.category}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Task {id}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <div className="flex items-start justify-between mt-4">
           <div className="flex items-start gap-4">
             <Link href={`/benchmarks/${categorySlug}`}>
               <Button variant="ghost" size="icon" className="mt-1">
@@ -230,6 +247,7 @@ export default function TaskDetailPage({
               </p>
             </div>
           </div>
+        </div>
           <div className="flex items-center gap-2">
             {isEditing ? (
               <>
@@ -258,7 +276,7 @@ export default function TaskDetailPage({
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-3 pt-6">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Query Information */}

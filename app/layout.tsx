@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Suspense } from "react"
+import { TopNav } from "@/components/top-nav"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           <div className="flex h-screen">
             <AppSidebar />
-            <main className="flex-1 overflow-auto">{children}</main>
+            <main className="flex-1 flex flex-col overflow-hidden">
+              <TopNav />
+              <div className="flex-1 overflow-auto">{children}</div>
+            </main>
           </div>
         </Suspense>
         <Analytics />

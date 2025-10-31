@@ -283,8 +283,8 @@ export default function ModelEvaluationPage() {
                     ))}
                     {/* Rows */}
                     {filteredAgents.map((agent) => (
-                      <>
-                        <div key={`${agent}-label`} className="p-2 text-sm font-medium">{agent}</div>
+                      <div key={agent} className="contents">
+                        <div className="p-2 text-sm font-medium">{agent}</div>
                         {filteredScenarios.map((s) => {
                           const v = agentScenarioScores[agent][s]
                           const c = valueToHeatColor(v)
@@ -298,7 +298,7 @@ export default function ModelEvaluationPage() {
                             </div>
                           )
                         })}
-                      </>
+                      </div>
                     ))}
                   </div>
                 </div>

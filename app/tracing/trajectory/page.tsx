@@ -1,308 +1,189 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useMemo, useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Clock, DollarSign, Zap, Code } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { Eye, Share2, Search, Upload } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Progress } from "@/components/ui/progress"
+import { Spinner } from "@/components/ui/spinner"
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command"
 
-// Mock data for trajectory
-const trajectorySteps = [
-  {
-    id: 1,
-    type: "model_call",
-    name: "Initial Query Processing",
-    model: "gpt-4",
-    tokens: 450,
-    latency: 320,
-    cost: 0.0009,
-    timestamp: "14:30:01.234",
-  },
-  {
-    id: 2,
-    type: "tool_call",
-    name: "Web Search",
-    tool: "search_api",
-    tokens: 0,
-    latency: 850,
-    cost: 0.0001,
-    timestamp: "14:30:01.554",
-  },
-  {
-    id: 3,
-    type: "model_call",
-    name: "Result Synthesis",
-    model: "gpt-4",
-    tokens: 800,
-    latency: 580,
-    cost: 0.0016,
-    timestamp: "14:30:02.404",
-  },
-  {
-    id: 4,
-    type: "tool_call",
-    name: "Format Output",
-    tool: "formatter",
-    tokens: 0,
-    latency: 45,
-    cost: 0,
-    timestamp: "14:30:02.984",
-  },
-]
+type TrajectoryItem = { id: string; name: string; source: "online" | "offline"; createdAt: string }
 
-const tokenUsageData = [
-  { step: "Query", input: 120, output: 330 },
-  { step: "Search", input: 0, output: 0 },
-  { step: "Synthesis", input: 250, output: 550 },
-  { step: "Format", input: 0, output: 0 },
-]
-
-const latencyCostData = [
-  { name: "Query", latency: 320, cost: 0.9 },
-  { name: "Search", latency: 850, cost: 0.1 },
-  { name: "Synthesis", latency: 580, cost: 1.6 },
-  { name: "Format", latency: 45, cost: 0 },
+// Mock online traces for search
+const mockOnlineTraces = [
+  { id: "trace-001", name: "User Query Processing", input: "What is the weather today?", createdAt: "2025-01-10 14:30" },
+  { id: "trace-003", name: "Data Analysis", input: "Analyze sales data for Q4", createdAt: "2025-01-10 14:20" },
+  { id: "trace-005", name: "Content Generation", input: "Generate blog post about AI", createdAt: "2025-01-10 13:45" },
+  { id: "trace-006", name: "Customer Support", input: "Help customer with refund request", createdAt: "2025-01-10 13:30" },
 ]
 
 export default function TrajectoryPage() {
-  const [selectedTrace, setSelectedTrace] = useState("trace-001")
+  const router = useRouter()
+  const [items, setItems] = useState<TrajectoryItem[]>([])
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadingStep, setLoadingStep] = useState(0)
+
+  const loadingSteps = ["查找 trace", "添加到加载队列", "加载轨迹数据", "准备视图"]
+
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? window.localStorage.getItem("trajectories") : null
+    const list: TrajectoryItem[] = stored
+      ? JSON.parse(stored)
+      : [
+          { id: "trace-001", name: "User Query Processing", source: "online", createdAt: "2025-01-10" },
+          { id: "trace-002", name: "Code Generation", source: "offline", createdAt: "2025-01-09" },
+        ]
+    setItems(list)
+  }, [])
+
+  const rows = useMemo(() => items, [items])
+
+  const handleSelectTrace = (traceId: string) => {
+    setIsSearchOpen(false)
+    setIsLoading(true)
+    setLoadingStep(0)
+
+    const run = (step: number) => {
+      setLoadingStep(step)
+      if (step < loadingSteps.length - 1) {
+        setTimeout(() => run(step + 1), 500)
+      } else {
+        setTimeout(() => {
+          setIsLoading(false)
+          router.push(`/tracing/trajectory/${traceId}`)
+        }, 500)
+      }
+    }
+    run(0)
+  }
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
       <div className="border-b border-border bg-card px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">Trajectory View</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Visualize execution flow, tool usage, and performance metrics
-            </p>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/tracing/traces">Tracing</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Trajectory</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="flex items-center justify-between mt-4">
+          <h1 className="text-2xl font-semibold text-foreground">Trajectory</h1>
+          <div className="flex items-center gap-2">
+            <div className="relative w-[420px]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                readOnly
+                placeholder="search and add online traces"
+                className="pl-9"
+                onFocus={() => setIsSearchOpen(true)}
+                onClick={() => setIsSearchOpen(true)}
+              />
+            </div>
+            <Button variant="outline" size="icon" title="Upload traces">
+              <Upload className="h-4 w-4" />
+            </Button>
           </div>
-          <Select value={selectedTrace} onValueChange={setSelectedTrace}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select trace" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="trace-001">trace-001</SelectItem>
-              <SelectItem value="trace-002">trace-002</SelectItem>
-              <SelectItem value="trace-003">trace-003</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
-        <div className="grid gap-6">
-          {/* Summary Cards */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Tokens</CardTitle>
-                <Zap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">1,250</div>
-                <p className="text-xs text-muted-foreground">450 input / 800 output</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Latency</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">1.79s</div>
-                <p className="text-xs text-muted-foreground">4 steps executed</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Cost</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$0.0026</div>
-                <p className="text-xs text-muted-foreground">Model + tools</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Model</CardTitle>
-                <Code className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">GPT-4</div>
-                <p className="text-xs text-muted-foreground">2 model calls</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Trajectory Visualization */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Execution Timeline</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {trajectorySteps.map((step, index) => (
-                  <div key={step.id}>
-                    <div className="flex items-start gap-4">
-                      <div className="flex flex-col items-center">
-                        <div
-                          className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                            step.type === "model_call" ? "bg-primary/20 text-primary" : "bg-chart-2/20 text-chart-2"
-                          }`}
-                        >
-                          {step.type === "model_call" ? <Code className="h-5 w-5" /> : <Zap className="h-5 w-5" />}
-                        </div>
-                        {index < trajectorySteps.length - 1 && <div className="h-12 w-0.5 bg-border mt-2" />}
-                      </div>
-                      <div className="flex-1 pb-8">
-                        <div className="flex items-center justify-between mb-2">
-                          <div>
-                            <h4 className="font-semibold text-foreground">{step.name}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {step.type === "model_call" ? step.model : step.tool}
-                            </p>
-                          </div>
-                          <Badge variant="outline">{step.timestamp}</Badge>
-                        </div>
-                        <div className="flex gap-6 text-sm">
-                          {step.tokens > 0 && (
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <Zap className="h-3 w-3" />
-                              <span>{step.tokens} tokens</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            <span>{step.latency}ms</span>
-                          </div>
-                          {step.cost > 0 && (
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <DollarSign className="h-3 w-3" />
-                              <span>${step.cost.toFixed(4)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+      <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} title="搜索 Online Traces">
+        <CommandInput placeholder="搜索 trace ID、任务名称或输入内容..." />
+        <CommandList>
+          <CommandEmpty>未找到匹配的 online traces</CommandEmpty>
+          <CommandGroup heading="Online Traces">
+            {mockOnlineTraces.map((trace) => (
+              <CommandItem
+                key={trace.id}
+                value={`${trace.id} ${trace.name} ${trace.input}`}
+                onSelect={() => handleSelectTrace(trace.id)}
+                className="cursor-pointer"
+              >
+                <div className="flex flex-col gap-1 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-sm font-medium">{trace.id}</span>
+                    <Badge variant="default">online</Badge>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tabs for detailed views */}
-          <Tabs defaultValue="visualization" className="w-full">
-            <TabsList>
-              <TabsTrigger value="visualization">Visualization</TabsTrigger>
-              <TabsTrigger value="tokens">Token Usage</TabsTrigger>
-              <TabsTrigger value="raw">Raw Log</TabsTrigger>
-            </TabsList>
-            <TabsContent value="visualization" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Latency Breakdown</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={latencyCostData}>
-                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                        <XAxis dataKey="name" className="text-xs" />
-                        <YAxis className="text-xs" />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "var(--radius)",
-                          }}
-                        />
-                        <Bar dataKey="latency" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Cost Distribution</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={latencyCostData}>
-                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                        <XAxis dataKey="name" className="text-xs" />
-                        <YAxis className="text-xs" />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "var(--radius)",
-                          }}
-                        />
-                        <Bar dataKey="cost" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            <TabsContent value="tokens">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Token Usage by Step</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={tokenUsageData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                      <XAxis dataKey="step" className="text-xs" />
-                      <YAxis className="text-xs" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "var(--radius)",
-                        }}
-                      />
-                      <Bar dataKey="input" stackId="a" fill="hsl(var(--chart-3))" radius={[0, 0, 0, 0]} />
-                      <Bar dataKey="output" stackId="a" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="raw">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Raw Execution Log</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
-                    {JSON.stringify(
-                      {
-                        trace_id: "trace-001",
-                        name: "User Query Processing",
-                        input: "What is the weather today?",
-                        output: "The weather is sunny with 72°F",
-                        steps: trajectorySteps,
-                        total_tokens: 1250,
-                        total_latency_ms: 1795,
-                        total_cost: 0.0026,
-                      },
-                      null,
-                      2,
-                    )}
-                  </pre>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                  <span className="text-sm font-medium">{trace.name}</span>
+                  <span className="text-xs text-muted-foreground line-clamp-1">{trace.input}</span>
+                  <span className="text-xs text-muted-foreground">{trace.createdAt}</span>
+                </div>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+      <Dialog open={isLoading}>
+        <DialogContent showCloseButton={false} className="max-w-sm">
+          <DialogHeader className="sr-only">
+            <DialogTitle>正在加载轨迹</DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center gap-3">
+            <Spinner className="h-5 w-5" />
+            <div className="text-sm font-medium">正在加载轨迹...</div>
+          </div>
+          <div className="mt-2 text-xs text-muted-foreground">
+            {loadingSteps[loadingStep]}
+          </div>
+          <Progress value={((loadingStep + 1) / loadingSteps.length) * 100} />
+        </DialogContent>
+      </Dialog>
+      <div className="flex-1 overflow-auto p-6">
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Trace ID</TableHead>
+                <TableHead>Task</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead>CreatedAt</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((t) => (
+                <TableRow key={t.id}>
+                  <TableCell className="font-mono text-sm">{t.id}</TableCell>
+                  <TableCell className="font-medium">{t.name}</TableCell>
+                  <TableCell>
+                    <Badge variant={t.source === "online" ? "default" : "secondary"}>{t.source}</Badge>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{t.createdAt}</TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <Link href={`/tracing/trajectory/${t.id}`}>
+                      <Button size="sm" variant="ghost">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                    <Button size="sm" variant="ghost">
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
     </div>
   )

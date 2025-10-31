@@ -10,6 +10,7 @@ import { Plus, Search } from "lucide-react"
 import type { Benchmark, Difficulty } from "@/lib/types/benchmark"
 import { DIFFICULTY_COLORS, DIFFICULTY_OPTIONS } from "@/lib/constants/benchmark"
 import { formatCategorySlug } from "@/lib/utils/benchmark"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
 // Mock data - replace with API call in production
 const mockBenchmarks: Benchmark[] = [
@@ -114,22 +115,37 @@ export default function BenchmarksPage() {
   })
 
   return (
-    <div className="h-full overflow-auto bg-background">
-      <div className="px-8 md:px-12 lg:px-16 pt-16 pb-24">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-foreground">Benchmarks</h1>
-              <p className="text-sm text-muted-foreground mt-1">Manage evaluation benchmarks and test suites</p>
-            </div>
-            <Button asChild size="sm" className="h-8 gap-2">
-              <Link href="/benchmarks/create">
-                <Plus className="h-4 w-4" />
-                Create New Task
-              </Link>
-            </Button>
+    <div className="flex h-full flex-col">
+      {/* Header */}
+      <div className="border-b border-border bg-card px-6 py-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/benchmarks">Benchmark</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Query management</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="flex items-center justify-between mt-4">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">Benchmarks</h1>
+            <p className="text-sm text-muted-foreground mt-1">Manage evaluation benchmarks and test suites</p>
           </div>
+          <Button asChild size="sm" className="h-8 gap-2">
+            <Link href="/benchmarks/create">
+              <Plus className="h-4 w-4" />
+              Create New Task
+            </Link>
+          </Button>
+        </div>
+      </div>
 
+      {/* Content */}
+      <div className="flex-1 overflow-auto p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center gap-3">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
