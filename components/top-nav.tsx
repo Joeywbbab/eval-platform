@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LanguageSwitcher } from "@/components/language-switcher"
 
 type Notification = {
   id: string
@@ -29,15 +28,15 @@ export function TopNav() {
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "n1",
-      title: "John Smith notify 你：",
-      description: "已经完成任务请查收",
+      title: "John Smith notified you:",
+      description: "Task completed, please review",
       createdAt: "2025-09-02 10:30",
       read: false,
     },
     {
       id: "n2",
-      title: "Sarah Johnson notify 你：",
-      description: "分配了新任务给你： review deliverables",
+      title: "Sarah Johnson notified you:",
+      description: "New task assigned: review deliverables",
       createdAt: "2025-09-02 09:15",
       read: false,
     },
@@ -80,8 +79,6 @@ export function TopNav() {
       </div>
 
       <div className="flex items-center gap-3">
-        <LanguageSwitcher />
-
         <button className="rounded-md p-2 hover:bg-accent/50" aria-label="Search">
           <Search className="h-5 w-5" />
         </button>

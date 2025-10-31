@@ -44,40 +44,40 @@ type FeedbackQueue = {
 const mockQueues: FeedbackQueue[] = [
   {
     id: "queue-001",
-    name: "待分组",
+    name: "Ungrouped",
     completedItems: 12,
     pendingItems: 0,
     createdAt: "2025.9.4",
     assignedTo: "John Smith",
     status: "finish",
     traces: [
-      { id: "trace-001", name: "UI界面优化建议.......", deliverables: "design_v1.html", evalId: "Eval 101", createdAt: "2025.09.18" },
-      { id: "trace-002", name: "数据分析报告.......", deliverables: "analysis_v2.csv", evalId: "Eval 102", createdAt: "2025.09.19" },
+      { id: "trace-001", name: "UI interface optimization suggestions.......", deliverables: "design_v1.html", evalId: "Eval 101", createdAt: "2025.09.18" },
+      { id: "trace-002", name: "Data analysis report.......", deliverables: "analysis_v2.csv", evalId: "Eval 102", createdAt: "2025.09.19" },
     ],
   },
   {
     id: "queue-002",
-    name: "待评测",
+    name: "Pending Evaluation",
     completedItems: 2,
     pendingItems: 1,
     createdAt: "2025.9.4",
     assignedTo: "Sarah Johnson",
     status: "process",
     traces: [
-      { id: "trace-003", name: "API接口设计审查.......", deliverables: "api_design.md", evalId: "Eval 103", createdAt: "2025.09.20" },
+      { id: "trace-003", name: "API interface design review.......", deliverables: "api_design.md", evalId: "Eval 103", createdAt: "2025.09.20" },
     ],
   },
   {
     id: "queue-003",
-    name: "review deliverables",
+    name: "Review Deliverables",
     completedItems: 17,
     pendingItems: 80,
     createdAt: "2025.9.2",
     assignedTo: "Mike Chen",
     status: "process",
     traces: [
-      { id: "trace-004", name: "性能优化方案.......", deliverables: "performance_report.pdf", evalId: "Eval 104", createdAt: "2025.09.21" },
-      { id: "trace-005", name: "安全性评估.......", deliverables: "security_audit.txt", evalId: "Eval 105", createdAt: "2025.09.22" },
+      { id: "trace-004", name: "Performance optimization plan.......", deliverables: "performance_report.pdf", evalId: "Eval 104", createdAt: "2025.09.21" },
+      { id: "trace-005", name: "Security assessment.......", deliverables: "security_audit.txt", evalId: "Eval 105", createdAt: "2025.09.22" },
     ],
   },
 ]
@@ -93,7 +93,7 @@ export default function FeedbackPage() {
     const list: FeedbackQueue[] = stored ? JSON.parse(stored) : mockQueues
     setQueues(list)
     
-    // 初始化数据到 localStorage
+    // Initialize data to localStorage
     if (!stored && typeof window !== "undefined") {
       window.localStorage.setItem("feedbackQueues", JSON.stringify(mockQueues))
     }

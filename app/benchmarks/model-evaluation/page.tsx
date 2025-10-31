@@ -129,7 +129,7 @@ export default function ModelEvaluationPage() {
             <div className="flex flex-col gap-4">
               <Card className="flex-1">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Query 数量</CardTitle>
+                  <CardTitle className="text-sm font-medium">Query Count</CardTitle>
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -140,7 +140,7 @@ export default function ModelEvaluationPage() {
 
               <Card className="flex-1">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Agent 数量</CardTitle>
+                  <CardTitle className="text-sm font-medium">Agent Count</CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -151,7 +151,7 @@ export default function ModelEvaluationPage() {
 
               <Card className="flex-1">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sophia v3 排名</CardTitle>
+                  <CardTitle className="text-sm font-medium">Sophia v3 Ranking</CardTitle>
                   <Trophy className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>

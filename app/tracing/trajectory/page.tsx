@@ -39,7 +39,7 @@ export default function TrajectoryPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
 
-  const loadingSteps = ["查找 trace", "添加到加载队列", "加载轨迹数据", "准备视图"]
+  const loadingSteps = ["Finding trace", "Adding to load queue", "Loading trajectory data", "Preparing view"]
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem("trajectories") : null
@@ -107,10 +107,10 @@ export default function TrajectoryPage() {
         </div>
       </div>
 
-      <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} title="搜索 Online Traces">
-        <CommandInput placeholder="搜索 trace ID、任务名称或输入内容..." />
+      <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} title="Search Online Traces">
+        <CommandInput placeholder="Search trace ID, task name or input content..." />
         <CommandList>
-          <CommandEmpty>未找到匹配的 online traces</CommandEmpty>
+          <CommandEmpty>No matching online traces found</CommandEmpty>
           <CommandGroup heading="Online Traces">
             {mockOnlineTraces.map((trace) => (
               <CommandItem
@@ -136,11 +136,11 @@ export default function TrajectoryPage() {
       <Dialog open={isLoading}>
         <DialogContent showCloseButton={false} className="max-w-sm">
           <DialogHeader className="sr-only">
-            <DialogTitle>正在加载轨迹</DialogTitle>
+            <DialogTitle>Loading Trajectory</DialogTitle>
           </DialogHeader>
           <div className="flex items-center gap-3">
             <Spinner className="h-5 w-5" />
-            <div className="text-sm font-medium">正在加载轨迹...</div>
+            <div className="text-sm font-medium">Loading trajectory...</div>
           </div>
           <div className="mt-2 text-xs text-muted-foreground">
             {loadingSteps[loadingStep]}
