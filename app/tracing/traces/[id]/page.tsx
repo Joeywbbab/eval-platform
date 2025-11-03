@@ -7,11 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, Share2, ChevronUp, ChevronDown, MessageSquare, X } from "lucide-react"
+import { ChevronLeft, Share2, ChevronUp, ChevronDown, MessageSquare } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 const mockTrace = {
   id: "trace-003",
@@ -152,29 +153,6 @@ export default function TraceDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              {isCommentsOpen && (
-                <div className="mb-4 rounded-md border">
-                  <div className="flex items-center justify-between p-3 border-b">
-                    <div className="text-sm font-semibold">Comments</div>
-                    <Button variant="ghost" size="icon" onClick={() => setIsCommentsOpen(false)}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="p-3">
-                    <ScrollArea className="h-40 pr-2">
-                      <div className="space-y-3 text-sm text-muted-foreground">
-                        <div>No comments yet.</div>
-                      </div>
-                    </ScrollArea>
-                    <div className="pt-3">
-                      <Textarea placeholder="Add a comment..." rows={3} />
-                      <div className="mt-2 text-right">
-                        <Button size="sm">Send</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
               <Tabs defaultValue="run" className="w-full">
                 <TabsList>
                   <TabsTrigger value="run">Run</TabsTrigger>
@@ -202,6 +180,28 @@ export default function TraceDetailPage() {
           </Card>
         </div>
       </div>
+
+      {/* Comments Sheet */}
+      <Sheet open={isCommentsOpen} onOpenChange={setIsCommentsOpen}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Comments</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col h-full mt-4">
+            <ScrollArea className="flex-1 pr-2">
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <div>No comments yet.</div>
+              </div>
+            </ScrollArea>
+            <div className="pt-4 border-t mt-4">
+              <Textarea placeholder="Add a comment..." rows={3} />
+              <div className="mt-2 text-right">
+                <Button size="sm">Send</Button>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { MessageSquare, Users, Trophy } from "lucide-react"
 import {
   CartesianGrid,
@@ -117,7 +118,18 @@ export default function ModelEvaluationPage() {
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border bg-card px-6 py-4">
-        <h1 className="text-2xl font-semibold text-foreground">Model Evaluation</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/benchmarks">Benchmark</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Model Evaluation</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="text-2xl font-semibold text-foreground mt-4">Model Evaluation</h1>
         <p className="text-sm text-muted-foreground mt-1">Compare model versions and analyze performance across scenarios</p>
       </div>
 

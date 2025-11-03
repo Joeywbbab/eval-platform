@@ -128,20 +128,20 @@ export default function DashboardPage() {
                       value="87%"
                       trend={{ value: "+5%", direction: "up", label: "improvement" }}
                     />
-                    <div className="space-y-2">
-                      <MetricCard title="Human Feedback Summary" value={82} />
-                      <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                        <p className="text-xs text-muted-foreground">
-                          Total ratings: {totalRatings}
-                        </p>
-                        <div className="flex items-center gap-3">
-                          <div className="text-xs">
-                            <span className="text-primary font-semibold">{highRatings}</span>
-                            <span className="text-muted-foreground"> high ratings</span>
+                    <div className="rounded-lg border border-border bg-card p-6">
+                      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <h3 className="text-sm font-medium text-muted-foreground">Human Feedback Summary</h3>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="text-2xl font-bold">{totalRatings}</div>
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">High ratings (4-5★)</span>
+                            <span className="font-semibold text-primary">{highRatings}</span>
                           </div>
-                          <div className="text-xs">
-                            <span className="text-muted-foreground font-semibold">{lowRatings}</span>
-                            <span className="text-muted-foreground"> low ratings</span>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">Low ratings (1-2★)</span>
+                            <span className="font-semibold text-muted-foreground">{lowRatings}</span>
                           </div>
                         </div>
                       </div>

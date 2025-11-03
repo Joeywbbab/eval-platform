@@ -183,7 +183,7 @@ export default function QueuePage() {
                 {visible.createdAt && <TableHead>CREATEDAT</TableHead>}
                 {visible.input && <TableHead>INPUT</TableHead>}
                 {visible.output && <TableHead>OUTPUT</TableHead>}
-                {visible.process && <TableHead className="text-right">PROCESS</TableHead>}
+                {visible.process && <TableHead>PROCESS</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -212,7 +212,7 @@ export default function QueuePage() {
                     <TableCell className="max-w-[220px] truncate text-muted-foreground">-</TableCell>
                   )}
                   {visible.process && (
-                    <TableCell className="text-right">
+                    <TableCell>
                       <Link href={`/evaluation/feedback/queue/${queueId}/${t.id}`}>
                         <Button size="sm" variant="default" className="bg-black text-white hover:bg-black/90">
                           Process eval
